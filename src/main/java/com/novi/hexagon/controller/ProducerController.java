@@ -19,11 +19,6 @@ public class ProducerController {
     @Autowired
     private ProducerRepository producerRepository;
 
-    //get producer
-//    @GetMapping("producers")
-//    public List<Producer> getAllProducers(){
-//        return this.producerRepository.findAll();
-//    }
 
     //get producer
     @GetMapping("producers")
@@ -32,11 +27,6 @@ public class ProducerController {
         return new ResponseEntity<>(AllProducers, HttpStatus.OK);
     }
 
-    //get producer by Id
-//    @GetMapping("producers/{id}")
-//    public Optional<Producer> getProducerById(@PathVariable("id") Long id){
-//        return this.producerRepository.findById(id);
-//    }
 
     //get producer by Id
     @GetMapping("producers/{id}")
@@ -45,11 +35,6 @@ public class ProducerController {
         return new ResponseEntity<>(producer, HttpStatus.OK);
     }
 
-    //save producer
-//    @PostMapping("producers")
-//    public Producer createProducer(@RequestBody Producer producer){
-//        return this.producerRepository.save(producer);
-//    }
 
     //save producer
     @PostMapping("producers")
@@ -80,16 +65,6 @@ public class ProducerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         }
-
-
-
-
-
-
-
-
-
-
 
 
 }
