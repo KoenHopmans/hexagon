@@ -1,7 +1,9 @@
 package com.novi.hexagon.config;
 
-import com.novi.hexagon.service.MyUserDetailService;
+import com.novi.hexagon.filter.JwtRequestFilter;
+import com.novi.hexagon.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,22 +14,25 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public MyUserDetailService myUserDetailService;
+    public CustomUserDetailsService customUserDetailsService;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailService);
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService);
     }
-
 
     @Override
     @Bean
@@ -35,34 +40,42 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
-
-    @Bean PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        //JWT token authentication
         http
-                //HTTP Basic authentication
                 .csrf().disable()
-                .httpBasic()
-                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
-                .antMatchers("/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/**").permitAll()
+                .antMatchers("/authenticate").permitAll()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin().disable()
-            .sessionManagement()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
+    }
 
+    @Configuration
+    public class WebConfig {
+
+        @Autowired
+        private CrosFilter corsFilter;
+
+        @Bean
+        public FilterRegistrationBean corsFilter() {
+            FilterRegistrationBean registration = new FilterRegistrationBean();
+            registration.setFilter(corsFilter);
+            registration.addUrlPatterns("/*");
+            registration.setName("corsFilter");
+            registration.setOrder(1);
+            return registration;
+        }
     }
 
 }
