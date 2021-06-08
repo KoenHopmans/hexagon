@@ -54,6 +54,14 @@ public class FileStorageService {
     }
 
 
+    public void deleteFile(String filename) throws IOException {
+        Path deleteLocation = Paths
+                .get(fileStorageLocation + File.separator + StringUtils.cleanPath(filename));
+        Files.delete(deleteLocation);
+    }
+
+
+
 
 
     public Resource loadFileAsResource(String fileName) {

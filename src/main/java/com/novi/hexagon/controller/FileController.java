@@ -1,6 +1,7 @@
 package com.novi.hexagon.controller;
 
 import com.novi.hexagon.model.Demo;
+import com.novi.hexagon.model.Producer;
 import com.novi.hexagon.model.UploadDemo;
 import com.novi.hexagon.model.User;
 import com.novi.hexagon.service.FileStorageService;
@@ -42,10 +43,17 @@ public class FileController {
     }
 
     @PostMapping(path="/file-upload" , consumes = {MULTIPART_FORM_DATA_VALUE})
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String uploadFile(@RequestParam("username") String username,
+                             @RequestParam("artist") Object artist,
+                             @RequestParam("file") MultipartFile file,
+                             RedirectAttributes redirectAttributes) {
 
         fileStorageService.uploadFile(file);
         System.out.println("FILE-NAME " + file.getOriginalFilename());
+        System.out.println("ARTIST " + artist);
+        System.out.println("USERNAME " + username);
+
+
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
