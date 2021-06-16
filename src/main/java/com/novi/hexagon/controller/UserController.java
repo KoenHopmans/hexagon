@@ -4,6 +4,7 @@ import com.novi.hexagon.exceptions.BadRequestException;
 import com.novi.hexagon.model.User;
 import com.novi.hexagon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -42,6 +43,19 @@ public class UserController {
     @PutMapping(value = "/{username}")
     public ResponseEntity<Object> updateUser(@PathVariable("username") String username, @RequestBody User user) {
         userService.updateUser(username, user);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{username}/password")
+    @ResponseStatus(HttpStatus.OK)
+    public String hello() {
+        return "Hello password";
+    }
+
+
+    @PutMapping(value = "/{username}/password")
+    public ResponseEntity<Object> updatePassword(@PathVariable("username") String username, @RequestBody User user) {
+        userService.updatePassword(username, user);
         return ResponseEntity.noContent().build();
     }
 

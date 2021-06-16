@@ -57,6 +57,7 @@ public class ProducerController {
         if (oldProducer.isPresent()) {
             Producer updatedProducer = oldProducer.get();
             updatedProducer.setFirstName(producer.getFirstName());
+            updatedProducer.setFirstName(producer.getFirstName());
             updatedProducer.setLastName(producer.getLastName());
             updatedProducer.setEmail(producer.getEmail());
             producerRepository.save(updatedProducer);

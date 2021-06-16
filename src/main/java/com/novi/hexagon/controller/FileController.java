@@ -49,9 +49,6 @@ public class FileController {
                              RedirectAttributes redirectAttributes) {
 
         fileStorageService.uploadFile(file);
-        System.out.println("FILE-NAME " + file.getOriginalFilename());
-        System.out.println("ARTIST " + artist);
-        System.out.println("USERNAME " + username);
 
 
 

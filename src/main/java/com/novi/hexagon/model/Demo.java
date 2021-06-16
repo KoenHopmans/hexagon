@@ -2,15 +2,16 @@ package com.novi.hexagon.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@IdClass(com.novi.hexagon.model.DemoKey.class)
 @Table(name = "Demos")
 public class Demo implements Serializable {
 
-    @Id
+
     @Column(nullable = false)
     private String username;
 
@@ -25,17 +26,21 @@ public class Demo implements Serializable {
     @Column
     private String feedback;
 
+
+
     @Column
-    private String comment;
+    private String trackName;
 
-//    @OneToMany(
-//            targetEntity = com.novi.hexagon.model.Comment.class,
-//            mappedBy = "demo",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.EAGER)
-//    private Set<Authority> comments = new HashSet<>();
 
+
+
+    @OneToMany(
+            targetEntity = com.novi.hexagon.model.Comment.class,
+            mappedBy = "demo",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<com.novi.hexagon.model.Comment> comments = new HashSet<>();
 
     public Demo() {}
     public Demo(String username, String demo) {
@@ -59,7 +64,11 @@ public class Demo implements Serializable {
     public void setArtist(String artist) { this.artist = artist; }
     public String getFeedback() { return feedback; }
     public void setFeedback(String feedback) { this.feedback = feedback; }
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
+    public String getTrackName() { return trackName;}
+    public void setTrackName(String trackName) { this.trackName = trackName;}
+    public Set<Comment> getComments() { return comments; }
+    public void setComments(Set<Comment> comments) {this.comments = comments;}
+    public void addComment(Comment comment) { this.comments.add(comment); }
+    public void removeComment(Comment comment) { this.comments.remove(comment); }
+    }
 
-}

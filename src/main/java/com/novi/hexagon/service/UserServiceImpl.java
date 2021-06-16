@@ -33,7 +33,9 @@ public class UserServiceImpl implements com.novi.hexagon.service.UserService {
 
     @Override
     public Optional<User> getUser(String username) {
-        return userRepository.findById(username);
+        Optional<User> user = userRepository.findById(username);
+        user.get().setPassword("");
+        return user;
     }
 
     @Override
@@ -59,9 +61,32 @@ public class UserServiceImpl implements com.novi.hexagon.service.UserService {
     public void updateUser(String username, User newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException();
         User user = userRepository.findById(username).get();
-        user.setPassword(newUser.getPassword());
+//        user.setPassword(newUser.getPassword());
+        user.setEmail(newUser.getEmail());
+        user.setBirthDate(newUser.getBirthDate());
+        user.setLocation(newUser.getLocation());
+        user.setAbout(newUser.getAbout());
+        user.setGender(newUser.getGender());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        String photo = newUser.getPhoto();
+        System.out.println("PHOTO");
+        System.out.println(photo);
+        if(!(photo==null)){
+        user.setPhoto(newUser.getPhoto());}
         userRepository.save(user);
     }
+
+    @Override
+    public void updatePassword(String username, User newUser) {
+        System.out.println("TEST");
+        if (!userRepository.existsById(username)) throw new RecordNotFoundException();
+        User user = userRepository.findById(username).get();
+        System.out.println(user.getPassword());
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        userRepository.save(user);
+    }
+
 
     @Override
     public Set<Authority> getAuthorities(String username) {
